@@ -28,7 +28,7 @@ namespace WindowsFormsApp2
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
-
+        string IMGPath;
 
         private void btn_ImgImport_Click(object sender, EventArgs e)
         {
@@ -42,22 +42,31 @@ namespace WindowsFormsApp2
 
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    string IMGPath = dialog.FileName;
-
-                    try
-                    {
-                        inputPath = IMGPath;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
+                    IMGPath = dialog.FileName;
                 }
             }
-        }        
+        }
+
+        private void btn_transparent_Click(object sender, EventArgs e)
+        {
+            using (FileStream fs = new FileStream(IMGPath, FileMode.Open, FileAccess.Read))
+            using (Bitmap srcBitmap = new Bitmap(fs))
+            {
+
+                var hasAlpha = Image.IsAlphaPixelFormat(srcBitmap.PixelFormat);
+                Console.WriteLine(srcBitmap.PixelFormat + " alpha=" + hasAlpha);
+                if (hasAlpha == true)
+                    MessageBox.Show("图片是透明底色");
+            }
+            
+           
+            
+        }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
+            inputPath = IMGPath;
             int targetWidth = int.Parse(tbx_wight.Text);
             int targetHeight = int.Parse(tbx_height.Text);
 
@@ -101,7 +110,7 @@ namespace WindowsFormsApp2
                             
                             string fullPath = Path.Combine(outputPath, tbx_name.Text.Trim() + ".bmp");
                    
-                            b.Save(fullPath, ImageFormat.Png);
+                            b.Save(fullPath, ImageFormat.Bmp);
                            
                             pictureBox1.Image = b;
                         }
@@ -158,5 +167,60 @@ namespace WindowsFormsApp2
 
 
 
+        public static Bitmap ConvertToTransparent(string filePath)
+        {
+            // 1. 安全加载图片 (使用 FileStream 防止文件被锁定)
+            // 直接把结果覆盖保存回原路径
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            using (Bitmap srcBitmap = new Bitmap(fs))
+            {
+                // 2. 创建 32位 ARGB 目标图
+                Bitmap destBitmap = new Bitmap(srcBitmap.Width, srcBitmap.Height, PixelFormat.Format32bppArgb);
+                destBitmap.SetResolution(srcBitmap.HorizontalResolution, srcBitmap.VerticalResolution);
+
+                // 3. 定义颜色映射表 (ColorMap)
+                // 逻辑：
+                //   黑字 (0,0,0) -> 白字 (255,255,255)
+                //   白底 (255,255,255) -> 透明 (0,0,0,0)
+                ColorMap[] colorMap = new ColorMap[2];
+
+                // 映射 1: 黑色 -> 白色
+                colorMap[0] = new ColorMap();
+                colorMap[0].OldColor = Color.Black;
+                colorMap[0].NewColor = Color.White;
+
+                // 映射 2: 白色 -> 透明
+                colorMap[1] = new ColorMap();
+                colorMap[1].OldColor = Color.White;
+                colorMap[1].NewColor = Color.Transparent;
+
+                // 4. 设置 ImageAttributes
+                using (ImageAttributes attr = new ImageAttributes())
+                {
+                    attr.SetRemapTable(colorMap);
+
+                    // 5. 绘制
+                    using (Graphics g = Graphics.FromImage(destBitmap))
+                    {
+                        // 清空画布
+                        g.Clear(Color.Transparent);
+
+                        // 以最高质量绘制
+                        g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+
+                        g.DrawImage(
+                            srcBitmap,
+                            new Rectangle(0, 0, srcBitmap.Width, srcBitmap.Height),
+                            0, 0, srcBitmap.Width, srcBitmap.Height,
+                            GraphicsUnit.Pixel,
+                            attr);
+                    }
+                }
+
+                return destBitmap;
+            }
+        }
+
+        
     }
 }

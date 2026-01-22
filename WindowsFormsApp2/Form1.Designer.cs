@@ -37,6 +37,7 @@
             this.tbx_name = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.btn_work = new System.Windows.Forms.Button();
+            this.btn_transparent = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -84,7 +85,7 @@
             this.label1.Font = new System.Drawing.Font("宋体", 12F);
             this.label1.Location = new System.Drawing.Point(10, 226);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(15, 16);
+            this.label1.Size = new System.Drawing.Size(19, 20);
             this.label1.TabIndex = 3;
             this.label1.Text = "W";
             // 
@@ -94,7 +95,7 @@
             this.label2.Font = new System.Drawing.Font("宋体", 12F);
             this.label2.Location = new System.Drawing.Point(10, 311);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(15, 16);
+            this.label2.Size = new System.Drawing.Size(19, 20);
             this.label2.TabIndex = 3;
             this.label2.Text = "H";
             // 
@@ -112,7 +113,7 @@
             this.label3.Font = new System.Drawing.Font("宋体", 12F);
             this.label3.Location = new System.Drawing.Point(28, 89);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(103, 16);
+            this.label3.Size = new System.Drawing.Size(129, 20);
             this.label3.TabIndex = 3;
             this.label3.Text = "保存为文件名";
             // 
@@ -123,15 +124,26 @@
             this.btn_work.Name = "btn_work";
             this.btn_work.Size = new System.Drawing.Size(128, 55);
             this.btn_work.TabIndex = 0;
-            this.btn_work.Text = "转换";
+            this.btn_work.Text = "输出黑白图";
             this.btn_work.UseVisualStyleBackColor = true;
             this.btn_work.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btn_transparent
+            // 
+            this.btn_transparent.Location = new System.Drawing.Point(421, 297);
+            this.btn_transparent.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_transparent.Name = "btn_transparent";
+            this.btn_transparent.Size = new System.Drawing.Size(128, 55);
+            this.btn_transparent.TabIndex = 0;
+            this.btn_transparent.Text = "图片是不是透明底色";
+            this.btn_transparent.UseVisualStyleBackColor = true;
+            this.btn_transparent.Click += new System.EventHandler(this.btn_transparent_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 360);
+            this.ClientSize = new System.Drawing.Size(853, 509);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
@@ -139,6 +151,7 @@
             this.Controls.Add(this.tbx_name);
             this.Controls.Add(this.tbx_wight);
             this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.btn_transparent);
             this.Controls.Add(this.btn_work);
             this.Controls.Add(this.button1);
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -161,6 +174,7 @@
         private System.Windows.Forms.TextBox tbx_name;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btn_work;
+        private System.Windows.Forms.Button btn_transparent;
     }
 }
 
